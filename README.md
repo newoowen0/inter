@@ -117,6 +117,19 @@ As of January 1st, 2024, Replit is [no longer free](https://blog.replit.com/host
 5. Access the deployed website from the ports tab.
 6. For subsequent uses in the same codespace, just run `pnpm start`
 
+### Health checks
+
+This repository exposes a simple health endpoint at `/healthz` which returns a JSON object with `status`, `uptime`, and the package `version`. The endpoint is used by the included Dockerfile `HEALTHCHECK` and by Kubernetes liveness/readiness probes.
+
+Docker `HEALTHCHECK` example (included in this repo):
+
+```
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8080/healthz || exit 1
+```
+
+Use `/healthz` in monitoring, load balancers, and container orchestrators to verify the service is healthy.
+
 ### Solution for if there is no popup.
 
 1. Run `pnpm i`, and before `pnpm start`, prepend `PORT=8080`, replacing 8080 with another port. For example, `PORT=6969 pnpm start`.
